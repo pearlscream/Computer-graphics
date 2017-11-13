@@ -4,6 +4,7 @@ import utils.Point;
 import utils.Side;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
@@ -39,81 +40,99 @@ public class FigureBuilder extends JPanel {
         // draw the x and y axes
         drawGridAndAxes(g);
 //        drawFigure(g);
-        List<Point> innerShape = translateTransform((List<Point>) getPointsInner(100, 60, 35).get(0));
         Graphics2D g2 = (Graphics2D) g;
 
-//        List<Point> outerShape = translateTransform(getPointsOuter(g2));
-        int x1;
-        int x2;
-        int y1;
-        int y2;
-        int r = 40;
-        Point center = new Point(10,15);
-        for (double i = 180; i < 360; i++)
-        {
-            x1 = (int)(r * Math.cos(2 * Math.PI * i / 360) + center.getX());
-            y1 = (int)(r * Math.sin(2 * Math.PI * i / 360) + center.getY());
-            x2 = (int)(r * Math.cos(2 * Math.PI * (i + 1) / 360) + center.getX());
-            y2 = (int)(r * Math.sin(2 * Math.PI * (i + 1) / 360) + center.getY());
-            g2.drawLine(x1,y1,x2,y2);
-        }
-//        drawShape(g2, outerShape);
-        Point startPoint;
-        Point endPoint;
+        List<Point> outerShape = translateTransform(getPointsOuter());
+        drawShape(g2, outerShape);
 
+        List<Point> firstCircle = translateTransform(getFirstCircle());
+        drawShape(g2, firstCircle);
+
+        List<Point> secondCircle = translateTransform(getSecondCircle());
+        drawShape(g2, secondCircle);
+
+        List<Point> squad = translateTransform(getSquadPoints());
+        drawShape(g2, squad);
     }
 
-    private List<Point> getPointsOuter(Graphics2D g2) {
+    private List<Point> getPointsOuter() {
         LinkedList<Point> points = new LinkedList<>();
         points.add(basePoint);
-        points.add(new Point(50, basePoint.getY()));
+        points.add(new Point(40, basePoint.getY()));
         points.add(new Point(60, basePoint.getY() - 60));
         points.add(new Point(200, basePoint.getY() - 60));
         points.add(new Point(200, basePoint.getY() + 400));
         points.add(new Point(-100, basePoint.getY() + 400));
-        return points;
+        Point center = new Point(-90, 212);
 
-//        int radius = 150;
-//        for (int i = radius; i >= 100; i--) {
-//            points.add(new Point(i,-Math.sqrt(Math.pow(radius, 2) - Math.pow(i, 2))));
-//        }
+        int x;
+        int y;
+        int radius = 40;
+        int startDegree = 100;
+        int endDegree = 210;
 
-//        double cicleStart = 200;
-//        double circleEnd = 250;
-//        int a = -200;
-//        int b = 100;
-//        for (double i = cicleStart; i <= circleEnd; i++) {
-//            points.add(new Point(-Math.sqrt(Math.pow(radius, 2) - Math.pow(i - b, 2)) + a, i));
-//        }
-
-
-//
-//        for (int i = -radius; i <= radius; i++) {
-//            points.add(new Point(i, -Math.sqrt(Math.pow(radius, 2) - Math.pow(i, 2))));
-//        }
-
-
-//        return customCircleDraw(new Point(40, 70), 150, 100, 150, true, g2);
-    }
-
-    private List<Point> customCircleDraw(Point center, double radius, int start, int end, boolean clockwise, Graphics2D g2) {
-        int stepSize = (end - start) / 50;
-        int angle = start;
-        List<Point> points = new ArrayList<>();
-        Point startPoint = this.getCirclePoint(center, angle, radius, clockwise);
-        GeneralPath ctx = new GeneralPath();
-        ctx.moveTo(startPoint.getX(), startPoint.getY());
-        points.add(startPoint);
-        while (angle <= end) {
-            angle = angle + stepSize;
-            Point endPoint = this.getCirclePoint(center, angle, radius, clockwise);
-            ctx.lineTo(endPoint.getX(), endPoint.getY());
+        for (double i = startDegree; i < endDegree; i++) {
+            x = (int) (radius * Math.cos(2 * Math.PI * (i + 1) / 360) + center.getX());
+            y = (int) (radius * Math.sin(2 * Math.PI * (i + 1) / 360) + center.getY());
+            points.add(new Point(x, y));
         }
-        ctx.closePath();
-        g2.draw(ctx);
+        points.add(new Point(-100, 125));
+        points.add(new Point(-100, -85));
+
+        center = new Point(-35, -85);
+        startDegree = 200;
+        endDegree = 270;
+        radius = 67;
+
+        for (double i = startDegree; i < endDegree; i++) {
+            x = (int) (radius * Math.cos(2 * Math.PI * (i + 1) / 360) + center.getX());
+            y = (int) (radius * Math.sin(2 * Math.PI * (i + 1) / 360) + center.getY());
+            points.add(new Point(x, y));
+        }
+
         return points;
     }
 
+    private List<Point> getFirstCircle() {
+        int radius = 30;
+        int startDegree = 0;
+        int endDegree = 360;
+        int x;
+        int y;
+        LinkedList<Point> points = new LinkedList<>();
+        Point center = new Point(-50, -100);
+        for (double i = startDegree; i < endDegree; i++) {
+            x = (int) (radius * Math.cos(2 * Math.PI * (i + 1) / 360) + center.getX());
+            y = (int) (radius * Math.sin(2 * Math.PI * (i + 1) / 360) + center.getY());
+            points.add(new Point(x, y));
+        }
+        return points;
+    }
+
+    private List<Point> getSecondCircle() {
+        int radius = 30;
+        int startDegree = 0;
+        int endDegree = 360;
+        int x;
+        int y;
+        LinkedList<Point> points = new LinkedList<>();
+        Point center = new Point(-75, 200);
+        for (double i = startDegree; i < endDegree; i++) {
+            x = (int) (radius * Math.cos(2 * Math.PI * (i + 1) / 360) + center.getX());
+            y = (int) (radius * Math.sin(2 * Math.PI * (i + 1) / 360) + center.getY());
+            points.add(new Point(x, y));
+        }
+        return points;
+    }
+
+    private List<Point> getSquadPoints() {
+        LinkedList<Point> points = new LinkedList<>();
+        points.add(new Point(-25, -25));
+        points.add(new Point(75, -25));
+        points.add(new Point(75, 75));
+        points.add(new Point(-25, 75));
+        return points;
+    }
 
     private Point getCirclePoint(Point center, double angle, double radius, boolean clockwise) {
         double x = (Math.sin(angle) * radius) + (clockwise ? -center.getX() : center.getX());
@@ -143,53 +162,6 @@ public class FigureBuilder extends JPanel {
                     return new Point(x, y);
                 })
                 .collect(Collectors.toList());
-    }
-
-    private void drawFigure(Graphics g) {
-//        GeneralPath generalPath = new GeneralPath();
-//        generalPath.moveTo(0, 0);
-//        int radius = 150;
-//        int side = 80;
-//        for (int i = radius; i >= side; i--) {
-//            generalPath.lineTo(i, -Math.sqrt(Math.pow(radius, 2) - Math.pow(i, 2)));
-//        }
-//        generalPath.lineTo(side, 0);
-//        generalPath.closePath();
-//        Graphics2D g2 = (Graphics2D) g;
-//        g2.draw(generalPath);
-    }
-
-    private List<Object> getPointsInner(int radiusR2, int sideC, int sideD) {
-        List<Object> result = new ArrayList<>();
-        LinkedList<Point> points = new LinkedList<>();
-        int radius = radiusR2;
-        int side = sideC;
-        int verticalSide = sideD;
-        List<Side> sides = new ArrayList<>();
-        for (int i = radius; i >= side; i--) {
-            points.add(new Point(i, -Math.sqrt(Math.pow(radius, 2) - Math.pow(i, 2))));
-        }
-        sides.add(new Side("R2",
-                new Point(basePoint.getX(), basePoint.getY()),
-                new Point(points.getLast().getX() + basePoint.getX(), points.getLast().getY() + basePoint.getY())));
-        sides.add(new Side("D",
-                new Point(points.getLast().getX() + basePoint.getX(), points.getLast().getY() + basePoint.getY()),
-                new Point(points.getLast().getX() + basePoint.getX(), points.getLast().getY() - verticalSide + basePoint.getY())));
-
-        sides.add(new Side("C",
-                new Point(points.getLast().getX() + basePoint.getX(), points.getLast().getY() + basePoint.getY()),
-                new Point(points.getLast().getX() + basePoint.getX(), points.getLast().getY() - verticalSide + basePoint.getY())));
-
-        points.add(new Point(points.getLast().getX(), points.getLast().getY() - verticalSide));
-        sides.add(new Side("C",
-                new Point(points.getLast().getX() + basePoint.getX(), points.getLast().getY() + basePoint.getY()),
-                new Point(points.getLast().getX() - 2 * side + basePoint.getX(), points.getLast().getY() - basePoint.getY())));
-        points.add(new Point(points.getLast().getX() - side, points.getLast().getY()));
-
-//        points = fullShape(points);
-        result.add(points);
-        result.add(sides);
-        return result;
     }
 
 
